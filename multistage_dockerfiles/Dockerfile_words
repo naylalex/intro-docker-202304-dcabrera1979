@@ -3,13 +3,13 @@ WORKDIR /backend
 COPY . . 
 RUN mvn verify
 
-FROM openjdk:14-jdk-alpine
+FROM openjdk:8-jre-alpine
 WORKDIR /home/backend
 COPY --from=backend /backend/target ./target
-
-EXPOSE 8080
 
 RUN adduser -D user
 USER user
 
-CMD ["java", "-jar", "/home/backend/target/words.jar"]
+CMD ["java","-Xmx8m", "-Xms8m","-jar","/home/backend/target/words.jar"]
+
+EXPOSE 8080
