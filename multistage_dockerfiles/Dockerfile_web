@@ -1,0 +1,15 @@
+FROM golang:latest AS build
+WORKDIR /go/src/app
+COPY . .
+	
+RUN go mod init app
+	
+RUN go mod download 
+	
+RUN CGO_ENABLED=0 go build -o /go/bin/app dispatcher.go
+	
+FROM alpine:latest
+COPY --from=build /go/bin/app /app
+ENTRYPOINT ["/app"]
+
+EXPOSE 80

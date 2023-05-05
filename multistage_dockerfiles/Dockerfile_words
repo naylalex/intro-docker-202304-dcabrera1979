@@ -1,0 +1,15 @@
+FROM maven:3.6.3-jdk-14 as backend
+WORKDIR /backend
+COPY . . 
+RUN mvn verify
+
+FROM openjdk:8-jre-alpine
+WORKDIR /home/backend
+COPY --from=backend /backend/target ./target
+
+RUN adduser -D user
+USER user
+
+CMD ["java","-Xmx8m", "-Xms8m","-jar","/home/backend/target/words.jar"]
+
+EXPOSE 8080
